@@ -32,9 +32,7 @@ jobs:
       run: ls -la
 
     - name: Run fetch_news.py
-      run: |
-        python fetch_news.py
-        echo "Script finished running."
+      run: python fetch_news.py
 
     - name: Check contents of news.json
       run: cat news.json

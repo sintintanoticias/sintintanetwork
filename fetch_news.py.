@@ -11,10 +11,12 @@ def fetch_news():
         'country': 'es'
     }
     response = requests.get(URL, params=params)
-    news_data = response.json()
-
-    with open('news.json', 'w', encoding='utf-8') as f:
-        json.dump(news_data, f, ensure_ascii=False, indent=4)
+    if response.status_code == 200:
+        news_data = response.json()
+        with open('news.json', 'w', encoding='utf-8') as f:
+            json.dump(news_data, f, ensure_ascii=False, indent=4)
+    else:
+        raise Exception(f"Failed to fetch news: {response.status_code}")
 
 if __name__ == "__main__":
     fetch_news()

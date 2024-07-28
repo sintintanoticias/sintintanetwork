@@ -1,14 +1,14 @@
 import requests
 import json
 
-API_KEY = '7005a6609b9a4b0a8c3a0e35124817d4'
+API_KEY = '7005a6609b9a4b0a8c3a0e35124817d4'  # Your provided NewsAPI key
 URL = 'https://newsapi.org/v2/top-headlines'
 
 def fetch_news():
     params = {
         'apiKey': API_KEY,
         'language': 'es',
-        'country': 'es'
+        'country': 'do'  # Change to Dominican Republic
     }
     try:
         response = requests.get(URL, params=params)

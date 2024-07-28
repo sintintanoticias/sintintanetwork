@@ -13,18 +13,31 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4 # Updated to v4
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4 # Updated to v4
+      uses: actions/setup-python@v4
       with:
         python-version: '3.x'
 
     - name: Install dependencies
-      run: pip install requests
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Check Python version
+      run: python --version
+
+    - name: List files in directory
+      run: ls -la
 
     - name: Run fetch_news.py
-      run: python fetch_news.py
+      run: |
+        python fetch_news.py
+        echo "Script finished running."
+
+    - name: Check contents of news.json
+      run: cat news.json
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3

@@ -1,45 +1,28 @@
-name: Fetch News
+import requests
+import json
 
-on:
-  schedule:
-    - cron: '0 * * * *' # Runs every hour
-  push:
-    branches:
-      - main
+API_KEY = '7005a6609b9a4b0a8c3a0e35124817d4'
+URL = 'https://newsapi.org/v2/top-headlines'
 
-jobs:
-  fetch_news:
-    runs-on: ubuntu-latest
+def fetch_news():
+    params = {
+        'apiKey': API_KEY,
+        'language': 'es',
+        'country': 'es'
+    }
+    try:
+        response = requests.get(URL, params=params)
+        response.raise_for_status()  # Raise an error for bad responses
+        news_data = response.json()
+        with open('news.json', 'w', encoding='utf-8') as f:
+            json.dump(news_data, f, ensure_ascii=False, indent=4)
+        print("News fetched and saved successfully.")
+    except requests.RequestException as e:
+        print(f"An error occurred with the request: {e}")
+        raise
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install requests
-
-    - name: Check Python version
-      run: python --version
-
-    - name: List files in directory
-      run: ls -la
-
-    - name: Run fetch_news.py
-      run: python fetch_news.py
-
-    - name: Check contents of news.json
-      run: cat news.json
-
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./
-        publish_branch: gh-pages
+if __name__ == "__main__":
+    fetch_news()
